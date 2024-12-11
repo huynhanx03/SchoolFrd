@@ -1,5 +1,6 @@
 package com.scs.identity.controller;
 
+import com.scs.identity.dto.request.ApiResponse;
 import com.scs.identity.dto.request.UserCreationRequest;
 import com.scs.identity.dto.request.UserUpdateRequest;
 import com.scs.identity.entity.User;
@@ -17,8 +18,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    User createUser(@RequestBody @Valid UserCreationRequest request) {
-        return userService.createUser(request);
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+
+        apiResponse.setData(userService.createUser(request));
+
+        return apiResponse;
     }
 
     @GetMapping

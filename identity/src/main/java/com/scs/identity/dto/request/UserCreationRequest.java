@@ -1,13 +1,14 @@
 package com.scs.identity.dto.request;
 
+import com.scs.identity.util.ErrorMessageUtilHolder;
 import jakarta.validation.constraints.Size;
 
 public class UserCreationRequest {
 
-    @Size(min = 8, max = 50, message = "Username must be at least 8 characters and no more than 50 characters long")
+    @Size(min = 8, max = 50, message = "USERNAME_INVALID")
     private String username;
 
-    @Size(min = 8, max = 50, message = "Password must be at least 8 characters")
+    @Size(min = 8, max = 50, message = "PASSWORD_INVALID")
     private String password;
 
     public String getUsername() {

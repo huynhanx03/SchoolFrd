@@ -3,7 +3,10 @@ package com.scs.identity.service;
 import com.scs.identity.dto.request.UserCreationRequest;
 import com.scs.identity.dto.request.UserUpdateRequest;
 import com.scs.identity.entity.User;
+import com.scs.identity.exception.AppException;
+import com.scs.identity.exception.ErrorCode;
 import com.scs.identity.repository.UserRepository;
+import com.scs.identity.util.ErrorMessageUtilHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,11 @@ public class UserService {
     public User createUser(UserCreationRequest request) {
         User user = new User();
 
-        if (userRepository.existsByUsername(request.getUsername()))
-            throw new RuntimeException("Username already exists");
+        if (userRepository.existsByUsername(request.getUsername())) {
+            ErrorCode errorCode = ErrorCode.EXISTED;
+            errorCode.setMessage(ErrorMessageUtilHolder.getErrorMessageUtil().getMessage("USER_EXISTED"));
+            throw new AppException(errorCode);
+        }
 
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
