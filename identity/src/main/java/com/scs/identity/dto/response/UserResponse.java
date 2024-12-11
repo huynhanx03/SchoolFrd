@@ -1,4 +1,4 @@
-package com.scs.identity.dto.request;
+package com.scs.identity.dto.response;
 
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -9,10 +9,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
-    @Size(min = 8, max = 50, message = "USERNAME_INVALID")
+public class UserResponse {
+    String id;
     String username;
-
-    @Size(min = 8, max = 50, message = "PASSWORD_INVALID")
     String password;
 }
