@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_KEY(1000, getErrorMessage("KEY_INVAILD")),
     EXISTED(1001, ""),
     INVALID(1002, ""),
+    NOT_EXISTED(1003, ""),
 
     // HTTP-related error codes
     HTTP_BAD_REQUEST(400, getErrorMessage("HTTP_BAD_REQUEST")),
