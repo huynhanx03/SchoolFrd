@@ -1,4 +1,4 @@
-package com.scs.identity.dto.request;
+package com.scs.identity.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String username;
-    String password;
+public class IntrospectResponse {
+    Boolean valid;
 }

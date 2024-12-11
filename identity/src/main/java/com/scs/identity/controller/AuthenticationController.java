@@ -2,7 +2,9 @@ package com.scs.identity.controller;
 
 import com.scs.identity.dto.request.ApiResponse;
 import com.scs.identity.dto.request.AuthenticationRequest;
+import com.scs.identity.dto.request.IntrospectRequest;
 import com.scs.identity.dto.response.AuthenticationResponse;
+import com.scs.identity.dto.response.IntrospectResponse;
 import com.scs.identity.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,17 @@ public class AuthenticationController {
 
     @PostMapping("/log-in")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        boolean auth = authenticationService.authenticate(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(authenticationService.authenticate(request))
+                .build();
+    }
 
-        return ApiResponse.<AuthenticationResponse>builder().data(AuthenticationResponse.builder().authenticated(auth).build()).code(502).build();
+    @PostMapping("/introspect")
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) {
+        var data = authenticationService.introspect(request);
+
+        return ApiResponse.<IntrospectResponse>builder()
+                .data(data)
+                .build();
     }
 }
