@@ -1,18 +1,21 @@
 package com.scs.identity.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.scs.identity.dto.request.ApiResponse;
 import com.scs.identity.dto.request.UserCreationRequest;
 import com.scs.identity.dto.request.UserUpdateRequest;
 import com.scs.identity.dto.response.UserResponse;
 import com.scs.identity.entity.User;
 import com.scs.identity.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -32,9 +35,7 @@ public class UserController {
 
     @GetMapping
     ApiResponse<List<User>> getUsers() {
-        return ApiResponse.<List<User>>builder()
-                .data(userService.getUsers())
-                .build();
+        return ApiResponse.<List<User>>builder().data(userService.getUsers()).build();
     }
 
     @GetMapping("/{userId}")
@@ -45,7 +46,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+    ApiResponse<UserResponse> updateUser(
+            @PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateUser(userId, request))
                 .build();
@@ -59,8 +61,6 @@ public class UserController {
 
     @GetMapping("/my-info")
     ApiResponse<UserResponse> getMyInfo() {
-        return ApiResponse.<UserResponse>builder()
-                .data(userService.getMyInfo())
-                .build();
+        return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
     }
 }

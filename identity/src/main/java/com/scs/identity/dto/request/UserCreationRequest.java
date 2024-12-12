@@ -1,7 +1,9 @@
 package com.scs.identity.dto.request;
 
-import com.scs.identity.validator.ValidPassword;
 import jakarta.validation.constraints.Size;
+
+import com.scs.identity.validator.ValidPassword;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

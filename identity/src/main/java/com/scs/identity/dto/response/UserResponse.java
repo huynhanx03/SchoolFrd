@@ -1,10 +1,9 @@
 package com.scs.identity.dto.response;
 
-import jakarta.validation.constraints.Size;
+import java.util.Set;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

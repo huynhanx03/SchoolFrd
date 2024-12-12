@@ -1,17 +1,18 @@
 package com.scs.identity.exception;
 
-import com.scs.identity.dto.request.ApiResponse;
-import com.scs.identity.util.ErrorMessageUtilHolder;
+import java.util.Map;
+import java.util.Objects;
+
 import jakarta.validation.ConstraintViolation;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Map;
-import java.util.Objects;
+import com.scs.identity.dto.request.ApiResponse;
+import com.scs.identity.util.ErrorMessageUtilHolder;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -43,12 +44,11 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse> handlingAccessDeniedException(final AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.HTTP_UNAUTHORIZED;
 
-        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(
-                ApiResponse.builder()
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(ApiResponse.builder()
                         .code(errorCode.getCode())
                         .message(errorCode.getMessage())
-                        .build()
-        );
+                        .build());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

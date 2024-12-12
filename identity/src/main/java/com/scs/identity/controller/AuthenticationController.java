@@ -1,19 +1,21 @@
 package com.scs.identity.controller;
 
-import com.nimbusds.jose.JOSEException;
-import com.scs.identity.dto.request.*;
-import com.scs.identity.dto.response.AuthenticationResponse;
-import com.scs.identity.dto.response.IntrospectResponse;
-import com.scs.identity.service.AuthenticationService;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.text.ParseException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
+import com.nimbusds.jose.JOSEException;
+import com.scs.identity.dto.request.*;
+import com.scs.identity.dto.response.AuthenticationResponse;
+import com.scs.identity.dto.response.IntrospectResponse;
+import com.scs.identity.service.AuthenticationService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,9 +35,7 @@ public class AuthenticationController {
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) {
         var data = authenticationService.introspect(request);
 
-        return ApiResponse.<IntrospectResponse>builder()
-                .data(data)
-                .build();
+        return ApiResponse.<IntrospectResponse>builder().data(data).build();
     }
 
     @PostMapping("/refresh")

@@ -1,10 +1,12 @@
 package com.scs.identity.service;
 
-import com.scs.identity.dto.request.UserCreationRequest;
-import com.scs.identity.dto.response.UserResponse;
-import com.scs.identity.entity.User;
-import com.scs.identity.exception.AppException;
-import com.scs.identity.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +16,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import com.scs.identity.dto.request.UserCreationRequest;
+import com.scs.identity.dto.response.UserResponse;
+import com.scs.identity.entity.User;
+import com.scs.identity.exception.AppException;
+import com.scs.identity.repository.UserRepository;
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
@@ -42,15 +42,10 @@ public class UserServiceTest {
                 .password("12345678")
                 .build();
 
-        userResponse = UserResponse.builder()
-                .id("cf0600f538b3")
-                .username("john")
-                .build();
+        userResponse =
+                UserResponse.builder().id("cf0600f538b3").username("john").build();
 
-        user = User.builder()
-                .id("cf0600f538b3")
-                .username("john")
-                .build();
+        user = User.builder().id("cf0600f538b3").username("john").build();
     }
 
     @Test
