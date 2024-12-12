@@ -31,23 +31,36 @@ public class UserController {
     }
 
     @GetMapping
-    List<User> getUsers() {
-        return userService.getUsers();
+    ApiResponse<List<User>> getUsers() {
+        return ApiResponse.<List<User>>builder()
+                .data(userService.getUsers())
+                .build();
     }
 
     @GetMapping("/{userId}")
-    UserResponse getUser(@PathVariable("userId") String userId) {
-        return userService.getUser(userId);
+    ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.getUser(userId))
+                .build();
     }
 
     @PutMapping("/{userId}")
-    UserResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(userId, request);
+    ApiResponse<UserResponse> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.updateUser(userId, request))
+                .build();
     }
 
     @DeleteMapping("{userId}")
-    String deleteUser(@PathVariable("userId") String userId) {
+    ApiResponse<Void> deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
-        return "User has been deleted";
+        return ApiResponse.<Void>builder().build();
+    }
+
+    @GetMapping("/my-info")
+    ApiResponse<UserResponse> getMyInfo() {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.getMyInfo())
+                .build();
     }
 }
