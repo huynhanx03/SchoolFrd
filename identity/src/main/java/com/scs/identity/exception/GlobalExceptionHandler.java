@@ -15,8 +15,6 @@ import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private static final String MIN_ATTRIBUTE = "min";
-
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingException(final Exception exception) {
         ApiResponse apiResponse = new ApiResponse();
@@ -86,8 +84,12 @@ public class GlobalExceptionHandler {
     }
 
     private String mapAttribute(String message, Map<String, Object> attributes) {
-        String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            String placeholder = "{" + entry.getKey() + "}";
+            String value = String.valueOf(entry.getValue());
+            message = message.replace(placeholder, value);
+        }
 
-        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
+        return message;
     }
 }

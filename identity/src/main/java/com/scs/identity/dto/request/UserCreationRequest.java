@@ -1,5 +1,6 @@
 package com.scs.identity.dto.request;
 
+import com.scs.identity.validator.ValidPassword;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,5 +15,6 @@ public class UserCreationRequest {
     String username;
 
     @Size(min = 8, max = 50, message = "PASSWORD_INVALID")
+    @ValidPassword(message = "BAD_PASSWORD")
     String password;
 }
