@@ -24,5 +24,7 @@ security:
 
 jwt:
   signerKey: "g8Fg6sMWOGd8IxDgE9+4EzXz5lQizljjtbMiRUXT9UpC7HOUUQM/5FDgqV4y3a/G"
+  valid-duration: 3600
+  refreshable-duration: 36000
   strength: 10
   issuer: "nhanx03"
