@@ -30,8 +30,10 @@ public class PermissionController {
     }
 
     @GetMapping
-    List<PermissionResponse> getAll() {
-        return permissionService.getAll();
+    ApiResponse<List<PermissionResponse>> getAll() {
+        return ApiResponse.<List<PermissionResponse>>builder()
+                .data(permissionService.getAll())
+                .build();
     }
 
     @DeleteMapping("/{permission}")
