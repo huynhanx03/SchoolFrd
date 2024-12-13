@@ -1,8 +1,9 @@
 package com.scs.identity.exception;
 
-import com.scs.identity.util.ErrorMessageUtilHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+
+import com.scs.identity.util.ErrorMessageUtilHolder;
 
 public enum ErrorCode {
     // Generic error codes
@@ -56,4 +57,3 @@ public enum ErrorCode {
         return ErrorMessageUtilHolder.getErrorMessageUtil().getMessage(key);
     }
 }
-

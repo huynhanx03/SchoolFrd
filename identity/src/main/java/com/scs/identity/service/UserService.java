@@ -1,5 +1,17 @@
 package com.scs.identity.service;
 
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.scs.identity.constant.PredefinedRole;
 import com.scs.identity.dto.request.UserCreationRequest;
 import com.scs.identity.dto.request.UserUpdateRequest;
@@ -12,21 +24,11 @@ import com.scs.identity.mapper.UserMapper;
 import com.scs.identity.repository.RoleRepository;
 import com.scs.identity.repository.UserRepository;
 import com.scs.identity.util.ErrorMessageUtilHolder;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +69,8 @@ public class UserService {
     }
 
     public UserResponse getUser(String id) {
-        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
+        return userMapper.toUserResponse(
+                userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
     }
 
     @PostAuthorize("returnObject.username == authentication.name")

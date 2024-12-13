@@ -1,16 +1,18 @@
 package com.scs.identity.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.scs.identity.dto.request.ApiResponse;
 import com.scs.identity.dto.request.RoleRequest;
 import com.scs.identity.dto.response.RoleResponse;
 import com.scs.identity.service.RoleService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/roles")
