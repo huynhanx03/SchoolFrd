@@ -203,4 +203,6 @@ public class AuthenticationService {
 
         return stringJoiner.toString();
     }
+
+    private record TokenInfo(String token, Date expiryDate) {}
 }

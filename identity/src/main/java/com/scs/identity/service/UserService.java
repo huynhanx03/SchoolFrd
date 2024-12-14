@@ -3,6 +3,9 @@ package com.scs.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
+import com.scs.identity.dto.request.ProfileCreationRequest;
+import com.scs.identity.mapper.ProfileMapper;
+import com.scs.identity.repository.httpclient.ProfileClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -37,6 +40,8 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     RoleRepository roleRepository;
+    ProfileMapper profileMapper;
+    ProfileClient profileClient;
 
     @NonFinal
     @Value("${security.password.encoder.strength}")
@@ -59,6 +64,11 @@ public class UserService {
             errorCode.setMessage(ErrorMessageUtilHolder.getErrorMessageUtil().getMessage("USER_EXISTED"));
             throw new AppException(errorCode);
         }
+
+        ProfileCreationRequest profileRequest = profileMapper.toProfileCreationRequest(request);
+        profileRequest.setUserId(user.getId());
+
+        profileClient.createProfile(profileRequest);
 
         return userMapper.toUserResponse(user);
     }

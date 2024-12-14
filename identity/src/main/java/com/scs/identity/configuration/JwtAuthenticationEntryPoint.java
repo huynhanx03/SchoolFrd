@@ -11,14 +11,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scs.identity.dto.request.ApiResponse;
+import com.scs.identity.dto.response.ApiResponse;
 import com.scs.identity.exception.ErrorCode;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-            throws IOException, ServletException {
+            throws IOException {
         ErrorCode errorCode = ErrorCode.HTTP_UNAUTHORIZED;
 
         response.setStatus(errorCode.getHttpStatusCode().value());

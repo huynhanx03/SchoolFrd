@@ -8,7 +8,10 @@ import com.scs.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +30,12 @@ public class UserProfileService {
         UserProfile userProfile = userProfileRepository.findById(id).orElseThrow(() -> new RuntimeException("User profile not found"));
 
         return userProfileMapper.toUserProfileResponse(userProfile);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserProfileResponse> getAllProfiles() {
+        var profiles = userProfileRepository.findAll();
+
+        return profiles.stream().map(userProfileMapper::toUserProfileResponse).toList();
     }
 }

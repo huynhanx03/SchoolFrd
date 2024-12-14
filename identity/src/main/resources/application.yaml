@@ -28,3 +28,7 @@ jwt:
   refreshable-duration: 36000
   strength: 10
   issuer: "nhanx03"
+
+app:
+  services:
+    profile: http://localhost:8081/profile

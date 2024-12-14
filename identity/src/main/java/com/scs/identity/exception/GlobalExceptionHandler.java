@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.scs.identity.dto.request.ApiResponse;
+import com.scs.identity.dto.response.ApiResponse;
 import com.scs.identity.util.ErrorMessageUtilHolder;
 
 @ControllerAdvice
