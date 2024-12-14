@@ -7,6 +7,8 @@ import com.scs.identity.validator.ValidPassword;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,10 @@ public class UserCreationRequest {
     @Size(min = 8, max = 50, message = "PASSWORD_INVALID")
     @ValidPassword(message = "BAD_PASSWORD")
     String password;
+
+    String firstName;
+    String lastName;
+    String email;
+    String phone;
+    LocalDate dob;
 }

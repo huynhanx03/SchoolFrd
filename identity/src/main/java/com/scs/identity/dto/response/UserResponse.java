@@ -1,5 +1,6 @@
 package com.scs.identity.dto.response;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import lombok.*;
@@ -16,4 +17,10 @@ public class UserResponse {
     String password;
 
     Set<RoleResponse> roles;
+
+    String firstName;
+    String lastName;
+    String email;
+    String phone;
+    LocalDate dob;
 }

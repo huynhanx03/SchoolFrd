@@ -8,7 +8,7 @@ import com.scs.identity.util.ErrorMessageUtilHolder;
 public enum ErrorCode {
     // Generic error codes
     UNCATEGORIZED_EXCEPTION(504, HttpStatus.INTERNAL_SERVER_ERROR, getErrorMessage("UNCATEGORIZED_EXCEPTION")),
-    INVALID_KEY(1000, HttpStatus.BAD_REQUEST, getErrorMessage("KEY_INVAILD")),
+    INVALID_KEY(999, HttpStatus.BAD_REQUEST, getErrorMessage("KEY_INVAILD")),
     EXISTED(1001, HttpStatus.BAD_REQUEST, ""),
     INVALID(1002, HttpStatus.BAD_REQUEST, ""),
     NOT_EXISTED(1003, HttpStatus.NOT_FOUND, ""),
