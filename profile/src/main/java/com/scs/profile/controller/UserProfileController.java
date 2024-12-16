@@ -19,13 +19,17 @@ public class UserProfileController {
     UserProfileService userProfileService;
 
     @PostMapping
-    UserProfileResponse createProfile(@RequestBody ProfileCreateRequest request) {
-        return userProfileService.createProfile(request);
+    ApiResponse<UserProfileResponse> createProfile(@RequestBody ProfileCreateRequest request) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .data(userProfileService.createProfile(request))
+                .build();
     }
 
     @GetMapping("/{userProfileId}")
-    UserProfileResponse getProfile(@PathVariable String userProfileId) {
-        return userProfileService.getProfile(userProfileId);
+    ApiResponse<UserProfileResponse> getProfile(@PathVariable String userProfileId) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .data(userProfileService.getProfile(userProfileId))
+                .build();
     }
 
     @GetMapping
