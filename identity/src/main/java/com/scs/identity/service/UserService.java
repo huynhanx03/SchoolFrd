@@ -3,11 +3,13 @@ package com.scs.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
+import com.scs.event.dto.NotificationEvent;
 import com.scs.identity.dto.request.ProfileCreationRequest;
 import com.scs.identity.mapper.ProfileMapper;
 import com.scs.identity.repository.httpclient.ProfileClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +44,7 @@ public class UserService {
     RoleRepository roleRepository;
     ProfileMapper profileMapper;
     ProfileClient profileClient;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     @NonFinal
     @Value("${security.password.encoder.strength}")
@@ -68,9 +71,22 @@ public class UserService {
         ProfileCreationRequest profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
 
-        profileClient.createProfile(profileRequest);
+        var profile = profileClient.createProfile(profileRequest);
 
-        return userMapper.toUserResponse(user);
+        NotificationEvent notificationEvent = NotificationEvent.builder()
+                .channel("EMAIL")
+                .recipient(request.getEmail())
+                .subject("Welcome to scs")
+                .body("Hello, " + request.getUsername())
+                .build();
+
+        // Publish message to kafka
+        kafkaTemplate.send("notification-delivery", notificationEvent);
+
+        var userCreationReponse = userMapper.toUserResponse(user);
+        userCreationReponse.setId(profile.getData().getId());
+
+        return userCreationReponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -3,12 +3,15 @@ package com.scs.profile.service;
 import com.scs.profile.dto.request.ProfileCreateRequest;
 import com.scs.profile.dto.response.UserProfileResponse;
 import com.scs.profile.entity.UserProfile;
+import com.scs.profile.exception.AppException;
+import com.scs.profile.exception.ErrorCode;
 import com.scs.profile.mapper.UserProfileMapper;
 import com.scs.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +40,23 @@ public class UserProfileService {
         var profiles = userProfileRepository.findAll();
 
         return profiles.stream().map(userProfileMapper::toUserProfileResponse).toList();
+    }
+
+    public UserProfileResponse getMyProfile() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+
+        var profile = userProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_EXISTED));
+
+        return userProfileMapper.toUserProfileResponse(profile);
+    }
+
+    public UserProfileResponse getByUserId(String userId) {
+        UserProfile userProfile =
+                userProfileRepository.findByUserId(userId)
+                        .orElseThrow(() -> new AppException(ErrorCode.NOT_EXISTED));
+
+        return userProfileMapper.toUserProfileResponse(userProfile);
     }
 }
