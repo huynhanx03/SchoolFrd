@@ -1,17 +1,13 @@
 package com.scs.post.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.Instant;
 
-@Getter
-@Setter
+@Data
 @Builder
 @Document(value = "post")
 @FieldDefaults(level = AccessLevel.PRIVATE)

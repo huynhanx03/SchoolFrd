@@ -28,10 +28,16 @@ spring:
             - Path=${app.api-prefix}/notification/**
           filters:
             - StripPrefix=2
-        - id: post_service
+        - id: post
           uri: http://localhost:8083
           predicates:
             - Path=${app.api-prefix}/post/**
+          filters:
+            - StripPrefix=2
+        - id: score
+          uri: http://localhost:8084
+          predicates:
+            - Path=${app.api-prefix}/college-exam-score/**
           filters:
             - StripPrefix=2
 
