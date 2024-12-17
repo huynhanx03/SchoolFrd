@@ -4,6 +4,8 @@ server:
     context-path: /profile
 
 spring:
+  application:
+    name: profile-service
   neo4j:
     uri: bolt://localhost:7687
     authentication:
@@ -12,3 +14,19 @@ spring:
 
 application:
   language: "default"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
