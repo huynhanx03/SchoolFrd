@@ -31,7 +31,7 @@ public class ScoreService {
         var score = scoreRepository.findByStudentIdAndYear(studentId, year).orElseThrow(() -> {
             ErrorCode errorCode = ErrorCode.NOT_EXISTED;
             return new AppException(errorCode);
-        });;
+        });
 
         return scoreMapper.toScoreResponse(score);
     }
