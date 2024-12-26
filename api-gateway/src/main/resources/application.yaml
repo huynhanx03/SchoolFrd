@@ -56,3 +56,11 @@ management:
   endpoint:
     health:
       show-details: always
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: identity
+        url: /api/v1/identity/v3/api-docs
+    path: /swagger-ui.html
+

@@ -1,22 +1,20 @@
-package com.scs.post.entity;
+package com.scs.school.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.Instant;
-
 @Data
 @Builder
-@Document(value = "post")
+@Document(value = "school")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Post {
+public class School {
     @MongoId
     String id;
-    String userId;
-    String content;
-    Instant createdDate;
-    Instant modifiedDate;
-    String schoolId;
+    String code;
+    String name;
+    String description;
 }
