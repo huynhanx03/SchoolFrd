@@ -31,4 +31,11 @@ public class SchoolController {
     ApiResponse<List<SchoolResponse>> getUsers() {
         return ApiResponse.<List<SchoolResponse>>builder().data(schoolService.getSchools()).build();
     }
+
+    @GetMapping("/{schoolId}")
+    ApiResponse<SchoolResponse> getUser(@PathVariable("schoolId") String schoolId) {
+        return ApiResponse.<SchoolResponse>builder()
+                .data(schoolService.getSchool(schoolId))
+                .build();
+    }
 }

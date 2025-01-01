@@ -41,4 +41,14 @@ public class PostController {
                 .data(postService.getMyPosts(page, size))
                 .build();
     }
+
+    @GetMapping("/posts")
+    ApiResponse<PageResponse<PostResponse>> getPosts(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ){
+        return ApiResponse.<PageResponse<PostResponse>>builder()
+                .data(postService.getPosts(page, size))
+                .build();
+    }
 }
