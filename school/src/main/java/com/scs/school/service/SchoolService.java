@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,5 +39,11 @@ public class SchoolService {
         return results.stream()
                 .map(schoolMapper::toSchoolResponse)
                 .collect(Collectors.toList());
+    }
+
+    public SchoolResponse getSchool(String id) {
+        return schoolMapper.toSchoolResponse(schoolRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("School not found")
+        ));
     }
 }

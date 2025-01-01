@@ -22,4 +22,6 @@ public class PostResponse {
     String created;
     Instant createdDate;
     Instant modifiedDate;
+    String schoolId;
+    SchoolResponse school;
 }

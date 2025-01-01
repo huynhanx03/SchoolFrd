@@ -6,4 +6,6 @@ export const API = {
   LOGIN: "/identity/auth/log-in",
   MY_INFO: "/profile/internal/my-profile",
   MY_POST: "/post/my-posts",
+  SCHOOL: "/school/schools",
+  POST: "/post"
 };

@@ -40,6 +40,12 @@ spring:
             - Path=${app.api-prefix}/college-exam-score/**
           filters:
             - StripPrefix=2
+        - id: school
+          uri: http://localhost:8085
+          predicates:
+            - Path=${app.api-prefix}/school/**
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
