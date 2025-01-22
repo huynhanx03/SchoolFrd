@@ -23,6 +23,7 @@ public class UserProfileService {
     UserProfileRepository userProfileRepository;
     UserProfileMapper userProfileMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public UserProfileResponse createProfile(ProfileCreateRequest request) {
         UserProfile userProfile = userProfileMapper.toUserProfile(request);
 
