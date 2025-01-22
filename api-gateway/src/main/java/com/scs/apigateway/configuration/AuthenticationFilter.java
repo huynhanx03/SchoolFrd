@@ -25,6 +25,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -35,11 +37,21 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     ObjectMapper objectMapper;
 
     @NonFinal
-    private final String[] publicEndpoints = {
-            "/identity/auth/.*",
-            "/identity/users/registration",
-            "/notification/email/send"
-    };
+    private final Map<String, String[]> publicEndpoints = Map.of(
+            "/identity", new String[] {
+                    "/auth/.*",
+                    "/users/registration"
+            },
+            "/notification", new String[] {
+                    "/email/send"
+            },
+            "/college-exam-score", new String[] {
+                    "/scores/.*"
+            },
+            "/school", new String[] {
+                    "/schools.*"
+            }
+    );
 
     @Value("${app.api-prefix}")
     @NonFinal
@@ -47,8 +59,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Enter authentication filter....");
-
         if (isPublicEndpoint(exchange.getRequest()))
             return chain.filter(exchange);
 
@@ -58,7 +68,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             return unauthenticated(exchange.getResponse());
 
         String token = authHeader.get(0).replace("Bearer ", "");
-        log.info("Token: {}", token);
 
         return identityService.introspect(token).flatMap(introspectResponse -> {
             if (introspectResponse.getData().isValid())
@@ -73,10 +82,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         return -1;
     }
 
-    private boolean isPublicEndpoint(ServerHttpRequest request){
-        return Arrays.stream(publicEndpoints)
-                .anyMatch(s -> request.getURI().getPath().matches(apiPrefix + s));
+    private boolean isPublicEndpoint(ServerHttpRequest request) {
+        String requestPath = request.getURI().getPath();
+        return publicEndpoints.entrySet().stream()
+                .anyMatch(entry ->
+                        Arrays.stream(entry.getValue())
+                                .anyMatch(endpoint -> requestPath.matches(apiPrefix + entry.getKey() + endpoint))
+                );
     }
+
 
     Mono<Void> unauthenticated(ServerHttpResponse response){
         ApiResponse<?> apiResponse = ApiResponse.builder()
