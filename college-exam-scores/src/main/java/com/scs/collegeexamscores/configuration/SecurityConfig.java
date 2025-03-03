@@ -2,6 +2,8 @@ package com.scs.collegeexamscores.configuration;
 
 import com.scs.collegeexamscores.configuration.CustomJwtDecoder;
 import com.scs.collegeexamscores.configuration.JwtAuthenticationEntryPoint;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,8 +19,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    @NonFinal
+    @Value("${public.endpoints}")
+    private String[] PUBLIC_ENDPOINTS;
 
-    private static final String[] PUBLIC_ENDPOINTS = {
+    private static final String[] POST_PUBLIC_ENDPOINTS = {
     };
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {
@@ -33,10 +38,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .anonymous().requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
-                .permitAll()
-                .anyRequest()
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).anonymous()
+                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll().anyRequest()
                 .authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer

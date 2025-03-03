@@ -1,0 +1,9 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /school
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/school-service?authSource=admin

@@ -1,62 +1,8 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /identity
-
 spring:
   application:
     name: identity-service
-  datasource:
-    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity}
-    driverClassName: "com.mysql.cj.jdbc.Driver"
-    password: ${DBMS_PASSWORD:root}
-    username: ${DBMS_USERNAME:root}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  kafka:
-    bootstrap-servers: localhost:9094
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-application:
-  language: "default"
-
-security:
-  password:
-    encoder:
-      strength: 10
-
-jwt:
-  signerKey: "g8Fg6sMWOGd8IxDgE9+4EzXz5lQizljjtbMiRUXT9UpC7HOUUQM/5FDgqV4y3a/G"
-  valid-duration: 3600
-  refreshable-duration: 36000
-  strength: 10
-  issuer: "nhanx03"
-
-app:
-  services:
-    profile: http://localhost:8081/profile
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-
+  config:
+    import: configserver:http://localhost:9999
+  cloud:
+    config:
+      fail-fast: true

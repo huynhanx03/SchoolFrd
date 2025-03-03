@@ -21,7 +21,11 @@ import lombok.experimental.NonFinal;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {
+    @NonFinal
+    @Value("${public.endpoints}")
+    private String[] PUBLIC_ENDPOINTS;
+
+    private final String[] POST_PUBLIC_ENDPOINTS = {
         "/users", "/auth/log-in", "/auth/introspect", "/auth/log-out", "/auth/refresh"
     };
 
@@ -34,8 +38,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated());
 
