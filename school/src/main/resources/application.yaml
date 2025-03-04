@@ -1,14 +1,8 @@
-server:
-  port: 8085
-  servlet:
-    context-path: /school
-
 spring:
   application:
     name: school-service
-  data:
-    mongodb:
-      uri: mongodb://root:root@localhost:27017/school-service?authSource=admin
-
-application:
-  language: "default"
+  config:
+    import: configserver:http://localhost:9999
+  cloud:
+    config:
+      fail-fast: true

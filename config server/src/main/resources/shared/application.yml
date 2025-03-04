@@ -1,0 +1,42 @@
+application:
+  language: "default"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    configprops:
+      enabled: true
+    env:
+      enabled: true
+    loggers:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+public:
+  endpoints: >
+    /api/v1/auth/**,
+    /v2/api-docs,
+    /v3/api-docs,
+    /v3/api-docs/**,
+    /swagger-resources,
+    /swagger-resources/**,
+    /configuration/ui,
+    /configuration/security,
+    /swagger-ui/**,
+    /webjars/**,
+    /swagger-ui.html,
+    /actuator/**

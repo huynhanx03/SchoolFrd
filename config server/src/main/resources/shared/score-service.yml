@@ -1,0 +1,9 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /college-exam-score
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/score-service?authSource=admin

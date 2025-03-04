@@ -1,7 +1,7 @@
 package com.scs.post.configuration;
 
-import com.scs.post.configuration.CustomJwtDecoder;
-import com.scs.post.configuration.JwtAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Value;
+import lombok.experimental.NonFinal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,8 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    @NonFinal
+    @Value("${public.endpoints}")
+    private String[] PUBLIC_ENDPOINTS;
 
-    private static final String[] PUBLIC_ENDPOINTS = {
+    private static final String[] POST_PUBLIC_ENDPOINTS = {
             "/internal/users"
     };
 
@@ -30,8 +33,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated());
 

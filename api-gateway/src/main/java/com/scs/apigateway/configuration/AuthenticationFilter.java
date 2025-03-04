@@ -4,6 +4,8 @@ import com.scs.apigateway.dto.response.ApiResponse;
 import com.scs.apigateway.service.IdentityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scs.apigateway.utils.ArrayUtils;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +26,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -37,25 +40,41 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     ObjectMapper objectMapper;
 
     @NonFinal
-    private final Map<String, String[]> publicEndpoints = Map.of(
-            "/identity", new String[] {
+    private final Map<String, String[]> publicEndpoints = new HashMap<>(Map.of(
+            "/identity", new String[]{
                     "/auth/.*",
                     "/users/registration"
             },
-            "/notification", new String[] {
+            "/notification", new String[]{
                     "/email/send"
             },
-            "/college-exam-score", new String[] {
+            "/college-exam-score", new String[]{
                     "/scores/.*"
             },
-            "/school", new String[] {
+            "/school", new String[]{
                     "/schools.*"
+            },
+            "/profile", new String[]{
+            },
+            "/post", new String[]{
             }
-    );
+    ));
 
     @Value("${app.api-prefix}")
     @NonFinal
     private String apiPrefix;
+
+    @PostConstruct
+    private void initializePublicEndpoints() {
+        String[] additionalEndpoints = {
+                "/v3/api-docs"
+        };
+
+        for (Map.Entry<String, String[]> entry : publicEndpoints.entrySet()) {
+            String[] mergedEndpoints = ArrayUtils.mergeArrays(entry.getValue(), additionalEndpoints);
+            publicEndpoints.put(entry.getKey(), mergedEndpoints);
+        }
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
