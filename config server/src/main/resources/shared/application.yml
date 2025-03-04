@@ -16,6 +16,15 @@ management:
   endpoint:
     health:
       show-details: always
+    configprops:
+      enabled: true
+    env:
+      enabled: true
+    loggers:
+      enabled: true
+  info:
+    env:
+      enabled: true
 
 public:
   endpoints: >

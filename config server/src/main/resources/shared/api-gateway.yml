@@ -44,3 +44,26 @@ spring:
             - Path=${app.api-prefix}/school/**
           filters:
             - StripPrefix=2
+
+springdoc:
+  api-docs:
+    enabled: true
+    group:
+      enabled: true
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: Identity Service
+        url: ${app.api-prefix}/identity/v3/api-docs
+      - name: Notification Service
+        url: ${app.api-prefix}/notification/v3/api-docs
+      - name: Profile Service
+        url: ${app.api-prefix}/profile/v3/api-docs
+      - name: Post Service
+        url: ${app.api-prefix}/post/v3/api-docs
+      - name: Score Service
+        url: ${app.api-prefix}/college-exam-score/v3/api-docs
+      - name: School Service
+        url: ${app.api-prefix}/school/v3/api-docs
+  paths-to-match: "/**"
+  show-actuator: true
