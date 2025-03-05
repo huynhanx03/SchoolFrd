@@ -1,17 +1,190 @@
-version: "3"
-name: scs
+version: '3.8'
+
 services:
-  kafka:
-    image: 'bitnami/kafka:3.7.0'
-    container_name: kafka
-    hostname: kafka
-    ports:
-      - '9094:9094'
+  # MySQL Database
+  mysql:
+    image: mysql:8.0.40-debian
+    restart: always
     environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      MYSQL_DATABASE: identity
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+
+  # MongoDB
+  mongodb:
+    image: bitnami/mongodb:7.0.11
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_ROOT_USER: root
+      MONGODB_ROOT_PASSWORD: root
+    networks:
+      - my-network
+
+  # Neo4j
+  neo4j:
+    image: neo4j:latest
+    restart: always
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: neo4j/12345678
+    networks:
+      - my-network
+
+  # Redis
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - my-network
+
+  # Kafka
+  kafka:
+    image: bitnami/kafka:3.7.0
+    restart: always
+    ports:
+      - "9094:9094"
+    networks:
+      - my-network
+
+  # Config Server
+  config-server:
+    build: ./config-server
+    ports:
+      - "9999:9999"
+    depends_on:
+      - mysql
+      - mongodb
+      - neo4j
+      - redis
+      - kafka
+    networks:
+      - my-network
+
+  # Eureka Server
+  eureka:
+    build: ./eureka
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - my-network
+
+  # Monitor Admin
+  monitor-admin:
+    build: ./monitor-admin
+    ports:
+      - "9000:9000"
+    depends_on:
+      - config-server
+      - eureka
+    networks:
+      - my-network
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8888:8888"
+    depends_on:
+      - config-server
+      - eureka
+    networks:
+      - my-network
+
+  # Identity Service
+  identity:
+    build: ./identity
+    ports:
+      - "8080:8080"
+    depends_on:
+      - config-server
+      - eureka
+      - mysql
+    networks:
+      - my-network
+
+  # Profile Service
+  profile:
+    build: ./profile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - config-server
+      - eureka
+      - neo4j
+    networks:
+      - my-network
+
+  # Notification Service
+  notification:
+    build: ./notification
+    ports:
+      - "8082:8082"
+    depends_on:
+      - config-server
+      - eureka
+      - mongodb
+    networks:
+      - my-network
+
+  # Post Service
+  post:
+    build: ./post
+    ports:
+      - "8083:8083"
+    depends_on:
+      - config-server
+      - eureka
+      - mongodb
+    networks:
+      - my-network
+
+  # Score Service
+  score:
+    build: ./college-exam-scores
+    ports:
+      - "8084:8084"
+    depends_on:
+      - config-server
+      - eureka
+      - mongodb
+    networks:
+      - my-network
+
+  # School Service
+  school:
+    build: ./school
+    ports:
+      - "8085:8085"
+    depends_on:
+      - config-server
+      - eureka
+      - mongodb
+    networks:
+      - my-network
+
+  # Web App (React)
+  web-app:
+    build: ./web-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

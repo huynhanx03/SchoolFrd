@@ -1,10 +1,12 @@
 package com.scs.post.service;
 
+import com.scs.post.dto.request.CommentRequest;
 import com.scs.post.dto.response.PageResponse;
 import com.scs.post.dto.request.PostRequest;
 import com.scs.post.dto.response.PostResponse;
 import com.scs.post.dto.response.SchoolResponse;
 import com.scs.post.dto.response.UserProfileResponse;
+import com.scs.post.entity.Comment;
 import com.scs.post.entity.Post;
 import com.scs.post.mapper.PostMapper;
 import com.scs.post.repository.PostRepository;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,6 +39,7 @@ public class PostService {
     PostMapper postMapper;
     ProfileClient profileClient;
     SchoolClient schoolClient;
+    CacheService cacheService;
 
     @PreAuthorize("hasAuthority('CREATE_POST')")
     public PostResponse createPost(PostRequest request){
@@ -59,6 +63,21 @@ public class PostService {
 
         post = postRepository.save(post);
         return postMapper.toPostResponse(post);
+    }
+
+    public PostResponse getPost(String id) {
+        String cacheKey = "post:" + id;
+
+        Optional<Object> cachedPost = cacheService.get(cacheKey);
+        if (cachedPost.isPresent()) {
+            return (PostResponse) cachedPost.get();
+        }
+
+        PostResponse postResponse = postMapper.toPostResponse(postRepository.findById(id).orElseThrow(()
+                -> new RuntimeException("Post not found")));
+
+        cacheService.put(cacheKey, postResponse, 10);
+        return postResponse;
     }
 
     public PageResponse<PostResponse> getMyPosts(int page, int size){
@@ -119,5 +138,42 @@ public class PostService {
                 .totalElements(pageData.getTotalElements())
                 .data(postList)
                 .build();
+    }
+
+    public PostResponse createComment(String postId, CommentRequest request) {
+        var post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Comment comment = Comment.builder()
+                .userId(authentication.getName())
+                .content(request.getContent())
+                .createdDate(Instant.now())
+                .modifiedDate(Instant.now())
+                .build();
+
+        post.getComments().add(comment);
+        postRepository.save(post);
+        return postMapper.toPostResponse(post);
+    }
+
+    public PostResponse replyComment(String postId, String commentId, CommentRequest request) {
+        var post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Comment parentComment = post.getComments().stream()
+                .filter(comment -> comment.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        Comment reply = Comment.builder()
+                .userId(authentication.getName())
+                .content(request.getContent())
+                .createdDate(Instant.now())
+                .modifiedDate(Instant.now())
+                .build();
+
+        parentComment.getReplies().add(reply);
+        postRepository.save(post);
+        return postMapper.toPostResponse(post);
     }
 }

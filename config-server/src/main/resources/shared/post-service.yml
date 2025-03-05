@@ -7,6 +7,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/post-service?authSource=admin
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 60000
 
 app:
   services:

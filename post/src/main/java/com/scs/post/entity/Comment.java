@@ -1,6 +1,8 @@
 package com.scs.post.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -10,14 +12,14 @@ import java.util.List;
 
 @Data
 @Builder
+@Document(value = "post")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Post {
+public class Comment {
     @MongoId
     String id;
     String userId;
     String content;
     Instant createdDate;
     Instant modifiedDate;
-    String schoolId;
-    List<Comment> comments;
+    List<Comment> replies;
 }

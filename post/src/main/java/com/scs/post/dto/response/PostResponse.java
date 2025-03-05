@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,4 +25,5 @@ public class PostResponse {
     Instant modifiedDate;
     String schoolId;
     SchoolResponse school;
+    List<CommentResponse> comments;
 }
