@@ -7,43 +7,49 @@ app:
 spring:
   cloud:
     gateway:
+      default-filters:
+        - StripPrefix=2
+        - name: CircuitBreaker
+          args:
+            name: globalCircuitBreaker
+            fallbackUri: forward:/fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter:
+              replenishRate: 10
+              burstCapacity: 20
+              requestedTokens: 1
+
       routes:
         - id: identity
           uri: http://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
-          filters:
-            - StripPrefix=2
+
         - id: profile
           uri: http://localhost:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
-          filters:
-            - StripPrefix=2
+
         - id: notification
           uri: http://localhost:8082
           predicates:
             - Path=${app.api-prefix}/notification/**
-          filters:
-            - StripPrefix=2
+
         - id: post
           uri: http://localhost:8083
           predicates:
             - Path=${app.api-prefix}/post/**
-          filters:
-            - StripPrefix=2
+
         - id: score
           uri: http://localhost:8084
           predicates:
             - Path=${app.api-prefix}/college-exam-score/**
-          filters:
-            - StripPrefix=2
+
         - id: school
           uri: http://localhost:8085
           predicates:
             - Path=${app.api-prefix}/school/**
-          filters:
-            - StripPrefix=2
 
 springdoc:
   api-docs:
@@ -67,3 +73,21 @@ springdoc:
         url: ${app.api-prefix}/school/v3/api-docs
   paths-to-match: "/**"
   show-actuator: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      globalCircuitBreaker:
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2000ms
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+  ratelimiter:
+    instances:
+      globalRateLimiter:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
